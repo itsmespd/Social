@@ -13,7 +13,7 @@ if ( $type == 'request' )
 			</script>';
 
 		echo '<script type="text/javascript">
-				window.location.href = "searchresult.php";
+				window.location.href = "home_page.php";
 			</script>';
 	}
 }
@@ -28,7 +28,7 @@ else if ( $type == 'cancel' )
 			</script>';
 
 		echo '<script type="text/javascript">
-				window.location.href = "searchresult.php";
+				window.location.href = "home_page.php";
 			</script>';
 	}
 }
