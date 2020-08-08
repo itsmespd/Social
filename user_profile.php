@@ -130,18 +130,13 @@ function myFunction() {
 }
 </script>
     <br><br>
-    <!--button type="submit" name="login" >Login</button-->
-  </div>
-<!--
-  <div class="container" style="background-color:#f1f1f1">
-  <span class="psw"><a href="password_recovery.php?usertype=delivery person">Forgot password?</a></span>
-  <br>
-  <br>
     
   </div>
-  -->
+
+
   </center>
 </form>
+<button onclick="document.location.href='friend_requests.php'">My Friend Requests</button>
 
 </body>
 </html>

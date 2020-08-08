@@ -13,7 +13,9 @@
 										'gender'=>$_POST['gender'],
 										'email'	=>$usermail,
 										'pswd'	=>$_POST['pwd'],
-										'dp'	=>$imagename]);
+										'dp'	=>$imagename,
+									 	'friends' => array(),
+										'friendRequests' => array()]);
 		if($result->getInsertedCount()>0)
 		{
 			echo '<script type="text/javascript">

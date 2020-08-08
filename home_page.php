@@ -20,6 +20,12 @@ if(!empty($_COOKIE['user_email']))
 	<form action="" method="post">
 		<input type="submit" Value="Log Out" name="logout">
 	</form>
+	<button onclick="document.location.href='user_profile.php?email=<?php echo $user_email; ?>'">My Profile</button>
+	<br>
+<form action="searchresult.php" method="post">
+	<input type="text" placeholder="search friends....." name="searchbox">
+	<input type="submit" Value="Search" name="search">
+</form>
 	
 	<br><br>
 	<button onclick="document.location.href='create_post.php'">Post Something</button>
@@ -39,5 +45,4 @@ if(isset($_POST['logout']))
 					window.location.href = "login.php";
 				</script>';
 }
-
 ?>
