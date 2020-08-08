@@ -1,0 +1,44 @@
+{
+  "userName": "khanSahab",
+  "firstName": "Shahrukh",
+  "lastName": "Khan",
+  "friendList": [
+    {
+      "userName": "pnag1996",
+      "firstName": "Pronoy",
+      "lastName": "Nag"
+    },
+    {
+      "userName": "spd1996",
+      "firstName": "Shubhankar",
+      "lastName": "Pandey"
+    },
+    {
+      "userName": "sayamaya",
+      "firstName": "Sayantan",
+      "lastName": "Mukherjee"
+    },
+    {
+      "userName": "rajNag",
+      "firstName": "Rajesh",
+      "lastName": "Naskar"
+    }
+  ],
+  "friendRequest": [
+    {
+      "userName": "prott",
+      "firstName": "Prottoy",
+      "lastName": "Banerjee"
+    },
+    {
+      "userName": "pratt",
+      "firstName": "Prateek",
+      "lastName": "Banerjee"
+    },
+    {
+      "userName": "vivo",
+      "firstName": "Vivek",
+      "lastName": "Majumdar"
+    }
+  ]
+}
