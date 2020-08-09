@@ -22,11 +22,14 @@ if(!empty($_COOKIE['user_email']))
 	</form>
 	<button onclick="document.location.href='user_profile.php?email=<?php echo $user_email; ?>'">My Profile</button>
 	<br>
+
 <form action="searchresult.php" method="post">
 	<input type="text" placeholder="search friends....." name="searchbox">
 	<input type="submit" Value="Search" name="search">
 </form>
-	
+<br>
+	<button onclick="document.location.href='user_posts.php'">My Posts</button>
+	<br>
 	<br><br>
 	<button onclick="document.location.href='create_post.php'">Post Something</button>
 	<?php

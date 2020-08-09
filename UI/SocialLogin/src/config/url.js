@@ -1,5 +1,5 @@
 const ALL_URLS={
-    registerURL :"localhost:8080/Social/dummy.php"
+    registerURL :"http://localhost/Social/registrationprocess.php"
 }
 
 export default ALL_URLS
