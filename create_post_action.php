@@ -68,7 +68,7 @@
 				$result=$db->posts->insertOne([	'text'	=>$_POST['mytext'],
 												'author'	=>$usermail,
 												'timestamp'	=>new MongoDB\BSON\UTCDateTime,
-												'likes'		=>0
+												'likes'		=> array()
 												//'comments'	=>array(['id'=>"",'email'=>"",'comment'=>"",'commenttimestamp'=>""],['id'=>"",'email'=>"",'comment'=>"",'commenttimestamp'=>""])
 											]);
 
@@ -107,7 +107,7 @@
 													'text'		=>$_POST['mytext'],
 													'author'	=>$usermail,
 													'timestamp'	=>new MongoDB\BSON\UTCDateTime,
-													'likes'		=>0
+													'likes'		=> array()
 													//'comments'	=>array(['id'=>"",'email'=>"",'comment'=>"",'commenttimestamp'=>""],['id'=>"",'email'=>"",'comment'=>"",'commenttimestamp'=>""])
 												]);
 
