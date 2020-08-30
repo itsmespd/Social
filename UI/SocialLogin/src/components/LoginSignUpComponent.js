@@ -12,7 +12,10 @@ class LogInSignUpComponents extends React.Component {
           borderRadius: "10px",
         }}
       >
-        <LogInComponents />
+        <LogInComponents
+          unSetErrorMessage={this.props.unSetErrorMessage}
+          sendCredentialsToApp={this.props.sendCredentialsToApp}
+        />
       </div>
     );
   }
