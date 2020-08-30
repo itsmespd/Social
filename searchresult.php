@@ -1,5 +1,6 @@
 
 <?php
+
 	include('connection.php');
 	$searchinput=$_POST['searchbox'];
 	$myemail=$_COOKIE['user_email'];
@@ -27,13 +28,14 @@
 			$fname=$document['fname']; $lname=$document['lname']; $email=$document['email'];
 			$result1=$db->users->findOne(['email'=>$email],['projection' => ['friendRequests' => 1, '_id' => 0]]);
 			$result2=$db->users->findOne(['email'=>$email],['projection' => ['friends' => 1, '_id' => 0]]);
-
 			$flag=0;
 			$i=0;
 			foreach ($result1 as $document1)
 			{
-				if(sizeof($document1) != 0)
+				//echo "----------- searching friendRequests array ------------";
+				while(sizeof($document1) > $i)
 				{
+					//echo "Request from >> ".$document1[$i];
 					if ( $document1[$i] == $myemail )
 					{
 						$flag=1;
@@ -45,8 +47,10 @@
 			$i=0;
 			foreach ($result2 as $document2)
 			{
-				if(sizeof($document2) != 0)
+				//echo "----------- searching friends array ------------";
+				while(sizeof($document2) > $i)
 				{
+					//echo "Friends with >> ".$document2[$i];
 					if ( $document2[$i] == $myemail )
 					{
 						$flag=2;
@@ -55,7 +59,7 @@
 					$i++;
 				}
 			}
-
+			//echo "flag >> ".$flag;
 
 			if ($flag==0 and $email!=$myemail)
 			{
