@@ -4,7 +4,7 @@ import React from 'react'
 import Card from 'react-bootstrap/Card'
 
 const styleContent={
-    height:"700px",
+    height:"100%",
     width:"20%",
     border:"2px solid",
     marginLeft:"10px",
