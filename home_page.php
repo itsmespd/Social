@@ -1,4 +1,8 @@
+</!DOCTYPE html>
 <html>
+<head>
+	<title>Home Page</title>
+</head>
 <style>
 .myDiv {
   border: 5px outset red;
@@ -6,7 +10,17 @@
   text-align: center;
 }
 </style>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+    $(document).ready(function(){
+		 $("#div_refresh").load("load_feed.php");
+        setInterval(function() {
+            $("#div_refresh").load("load_feed.php");
+        }, 1000);
+    });
+</script>
 <body>
+<div id="div_refresh"></div>
 <?php
 $user_email=$_COOKIE['user_email'];
 include('connection.php');
@@ -31,7 +45,9 @@ if(!empty($_COOKIE['user_email']))
 	<input type="submit" Value="Search" name="search">
 </form>
 <br>
-	<button onclick="document.location.href='user_posts.php'">My Posts</button>
+	<button onclick="document.location.href='user_post.php'">My Posts</button>
+	<button onclick="document.location.href='user_notifications.php'">Notifications</button>
+	<button onclick="document.location.href='chats.php'">Chats</button>
 	<br>
 	<br><br>
 	<button onclick="document.location.href='create_post.php'">Post Something</button>
@@ -53,6 +69,7 @@ echo nl2br("\n");
 // $filter  = [];
 // $options = ['sort' => ['timestamp' => -1]];
 // $db->posts->find($filter,$options);
+
 $friends=$db->users->findOne(['email'=>$user_email],['projection' => ['friends' => 1, '_id' => 0]]);
 $posts=$db->posts->find([],['author'=>1,'_id'=>0,'sort' => ['timestamp' => -1]]);
 //print_r($posts);
@@ -68,7 +85,7 @@ foreach ($posts as $document1)
 	{
 		while(sizeof($document2) > $i)
 		{
-			if($author==$document2[$i])
+			if(($author==$document2[$i]) or ($author==$user_email))
 			{
 				$flag=1;
 				break;
@@ -135,7 +152,7 @@ foreach ($posts as $document1)
 						}
 						else if(empty($document3['text']))
 						{
-							$postimgpath="user_uploads/userid_".$friend_email."/".$document3['image'];
+							$postimgpath="user_uploads/userid_".$author."/".$document3['image'];
 							?>
 							<tr>
 								<td>
@@ -188,12 +205,26 @@ foreach ($posts as $document1)
 						<input type="hidden" name="btnval" value="<?php echo $buttonval; ?>">
 						<tr><td>
 							<input type="submit" name="LikeUnlike" value="<?php echo $buttonval; ?>">
+						</td>
+						</form>
+					<!-- for printing delete post button for own posts -->
+					<?php
+					if($author == $user_email)
+					{
+						?>
+						<form action="" method="POST">
+						<input type="hidden" name="postid" value="<?php echo $postID; ?>">
+						<td>
+							<input type="submit" name="Delete" value="Delete Post">
 						</td></tr>
 						</form>
+						<?php
+					}
+					?>
 					</table>
 				</div>
 				<div class="myDiv">
-					<table>
+						<table>
 						<tr>		
 						<td>
 							<form action="" method="POST">
@@ -204,14 +235,77 @@ foreach ($posts as $document1)
 						</td>
 						</tr>
 						</table>
-					</div>
+						</div>
+						<?php
+							$fetchcomments = $db->posts->aggregate(array(
+																array('$match'=>array(
+																	'_id'=>$postID
+																)),
 
+																array('$unwind'=>'$comments'),
+
+																array('$project'=>array('_id'=>0,'comments'=>1)),
+
+																array('$sort'=>array('comments.commenttimestamp'=>-1)),
+
+																array('$limit' => 2)
+														
+															));
+							
+							foreach ($fetchcomments as $documentf) 
+							{
+								// echo sizeof($documentf);
+								// print_r($documentf);
+								foreach ($documentf as $documentg) 
+								{
+		
+									?>
+									<div class="myDiv">
+										<table>
+											<tr>
+												<td><b>
+													<?php 
+														 $friendname=$db->users->find(['email'=>$documentg['email']]);
+															foreach ($friendname as $docu)
+															{
+																$friend_fname=$docu['fname'];
+																$friend_lname=$docu['lname'];
+															}
+															$friend_name=$friend_fname." ".$friend_lname;
+															echo $friend_name; 
+													?>
+												</b>
+											</td>
+											</tr>
+											<tr>
+												<td>
+													<?php echo $documentg['comment']; ?>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<?php 
+															$UTCDateTime=new MongoDB\BSON\UTCDateTime((string)$documentg['commenttimestamp']);
+															$DateTime=$UTCDateTime->toDateTime();
+															$strdatetime=$DateTime->format('Y-m-d H:i:s');
+															$timestamp=date('d/m/Y h:i A', strtotime($strdatetime. ' + 330 minutes')); 
+														 	echo $timestamp; 
+													?>
+												</td>
+											</tr>
+											</table>
+											</div>
+											<?php
+										}
+									}
+									?>
 						<br><br>
 						<?php
 				}
 
 		}
 }
+
 ?>
 </body>
 </html>
@@ -235,6 +329,7 @@ if(isset($_POST['LikeUnlike']))
 			echo '<script type="text/javascript">
 					window.location.href = "home_page.php";
 				</script>';
+			
 		}
 	}
 	else
@@ -242,10 +337,10 @@ if(isset($_POST['LikeUnlike']))
 		//echo "inside if Unlike";
 		$unliked = $db->posts->updateOne(['_id'=>new MongoDB\BSON\ObjectId($postID)],array('$pull' => array('likes' => $user_email)));
 		if($unliked->getModifiedCount()>0)
-		{
-			// echo '<script type="text/javascript">
-			// 		alert("You Unliked This Post !");
-			// 	</script>';
+		 {
+		// 	echo '<script type="text/javascript">
+		// 			alert("You Unliked This Post !");
+		// 		</script>';
 			echo '<script type="text/javascript">
 					window.location.href = "home_page.php";
 				</script>';
@@ -256,7 +351,7 @@ if(isset($_POST['Comment']))
 {
 	$postID=$_POST['postid'];
 	$comment=$_POST['comment'];
-	$commentID=time();
+	$commentID=time(); // append unique id with time
 	$commentUpdate = $db->posts->updateOne(['_id'=>new MongoDB\BSON\ObjectId($postID)],array('$push' => array('comments' => 
 													['id'=>$commentID,
 													'email'=>$user_email,
@@ -266,13 +361,65 @@ if(isset($_POST['Comment']))
 
 	if($commentUpdate->getModifiedCount()>0)
 	{
+		
+		// echo '<script type="text/javascript">
+		// 		alert("Comment Posted!");
+		// 	</script>';
+
+		$fetchauthor=$db->posts->find(['_id'=>new MongoDB\BSON\ObjectId($postID)]);
+		foreach ($fetchauthor as $document)
+		{
+			$author=$document['author'];
+		}
+		$myname=$db->users->find(['email'=>$user_email]);
+		foreach ($myname as $document)
+		{
+			$name=$document['fname']." ".$document['lname'];
+		}
+
+		if($author != $user_email)
+		{
+			$update2 = $db->users->updateOne(['email'=> $author],
+											array('$push' => array('notifications' => 
+											['notification'=>$name.' has commented on your post',
+											'link'=>"document.location.href='post_page.php?postid=$postsID'",
+											'timestamp'=>new MongoDB\BSON\UTCDateTime
+										])));
+		}
+
 		echo '<script type="text/javascript">
-				alert("Comment Posted!");
+				window.location.href = "home_page.php";
+			</script>';
+
+	}
+}
+
+if(isset($_POST['Delete']))
+{
+	$postID=$_POST['postid'];
+	$getPostImage= $db->posts->findOne(
+    ['_id'=> new MongoDB\BSON\ObjectId($postID), 
+    'image'=> ['$exists' => true]],['projection'=>['image'=>1,'_id'=>0]]);
+    if(!empty($getPostImage['image']))
+	{
+		$imgpath='user_uploads/userid_'.$user_email.'/'.$getPostImage['image'];
+		unlink($imgpath);
+	}
+	$deletePost=$db->posts->deleteOne(['_id'=> new MongoDB\BSON\ObjectId($postID)]);
+	$deletePostId = $db->users->updateOne(['email'=> $user_email],
+		array('$pull' => array("postIDs" => new MongoDB\BSON\ObjectId($postID))));
+
+	if($deletePost->getDeletedCount()>0 and $deletePostId->getModifiedCount()>0)
+	{
+		
+		echo '<script type="text/javascript">
+				alert("Post Deleted!");
 			</script>';
 
 		echo '<script type="text/javascript">
 				window.location.href = "home_page.php";
 			</script>';
+
 	}
 }
 

@@ -1,7 +1,13 @@
 <?php
 	include('connection.php');
 	$usermail=$_COOKIE['user_email'];
-
+	$username=$db->users->find(['email'=>$usermail]);
+	foreach ($username as $name)
+	{
+		$fname=$name['fname'];
+		$lname=$name['lname'];
+	}
+	$myname=$fname." ".$lname;
 	if(empty($_POST['mytext']) and filesize($_FILES['pic']['tmp_name'])==0)
 		{
 			echo '<script type="text/javascript">
@@ -27,6 +33,25 @@
 													'likes'		=> array()
 													//'comments'	=>array(['id'=>"",'email'=>"",'comment'=>"",'commenttimestamp'=>""],['id'=>"",'email'=>"",'comment'=>"",'commenttimestamp'=>""])
 												]);
+					$postsId= $result->getInsertedId();
+					$friendsfetch=$db->users->findOne(['email'=>$usermail],
+														['projection' => ['friends' => 1, '_id' => 0]]);
+					$j=0;
+					foreach ($friendsfetch as $value) 
+					{
+						$totalfriends=sizeof($value);
+						while($j < $totalfriends)
+						{
+								$friendemail=$value[$j];
+								$update2 = $db->users->updateOne(['email'=> $friendemail],
+											array('$push' => array('notifications' => 
+											['notification'=>$myname.' has posted something new',
+											'link'=>"document.location.href='post_page.php?postid=$postsId'",
+											'timestamp'=>new MongoDB\BSON\UTCDateTime
+													])));
+								$j++;
+						}
+					}
 
 					if($result->getInsertedCount()>0)
 					{
@@ -71,11 +96,31 @@
 												'likes'		=> array()
 												//'comments'	=>array(['id'=>"",'email'=>"",'comment'=>"",'commenttimestamp'=>""],['id'=>"",'email'=>"",'comment'=>"",'commenttimestamp'=>""])
 											]);
+				$postsId= $result->getInsertedId();
+					$friendsfetch=$db->users->findOne(['email'=>$usermail],
+														['projection' => ['friends' => 1, '_id' => 0]]);
+					$j=0;
+					foreach ($friendsfetch as $value) 
+					{
+						$totalfriends=sizeof($value);
+						while($j < $totalfriends)
+						{
+								$friendemail=$value[$j];
+								$update2 = $db->users->updateOne(['email'=> $friendemail],
+											array('$push' => array('notifications' => 
+											['notification'=>$myname.' has posted something new',
+											'link'=>"document.location.href='post_page.php?postid=$postsId'",
+											'timestamp'=>new MongoDB\BSON\UTCDateTime
+													])));
+								$j++;
+						}
+					}
 
 				if($result->getInsertedCount()>0)
 					{
 						$objectId = $result->getInsertedId();
 						$update = $db->users->updateOne(['email'=>$usermail],array('$push' => array("postIDs" => $objectId)));
+
 						if($update->getModifiedCount()>0)
 						{
 							echo '<script type="text/javascript">
@@ -111,6 +156,26 @@
 													//'comments'	=>array(['id'=>"",'email'=>"",'comment'=>"",'commenttimestamp'=>""],['id'=>"",'email'=>"",'comment'=>"",'commenttimestamp'=>""])
 												]);
 
+					$postsId= $result->getInsertedId();
+					$friendsfetch=$db->users->findOne(['email'=>$usermail],
+														['projection' => ['friends' => 1, '_id' => 0]]);
+					$j=0;
+					foreach ($friendsfetch as $value) 
+					{
+						$totalfriends=sizeof($value);
+						while($j < $totalfriends)
+						{
+								$friendemail=$value[$j];
+								$update2 = $db->users->updateOne(['email'=> $friendemail],
+											array('$push' => array('notifications' => 
+											['notification'=>$myname.' has posted something new',
+											'link'=>"document.location.href='post_page.php?postid=$postsId'",
+											'timestamp'=>new MongoDB\BSON\UTCDateTime
+													])));
+								$j++;
+						}
+					}
+					
 					if($result->getInsertedCount()>0)
 					{
 						$objectId = $result->getInsertedId();
