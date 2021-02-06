@@ -1,15 +1,16 @@
 # Social
-Social Website
-This project creates a Social website where users can do the following:
+Social Website:
+This project creates a Social Web application where users can do the following:
 
 1. Register and create an account.
-2. Login using a username and password and Logout.
-3. Create posts(both text post and image post with or without adding text to the image as caption).
-4. Send and receive Friend Requests.
-5. Like and comment on Friend's posts.
-6. Simple chat application integrated inside the application.
+2. Setup their profile incuding adding a profile photo.
+3. Login using a username and password and Logout.
+4. Create posts: both text post and image post with or without adding text to the image as caption.
+5. Send and receive Friend Requests.
+6. Like and comment on Friend's posts.
+7. Simple chat application integrated inside the application.
 
-It uses the following languages:
+It uses the following:
 
 1. React.JS and HTML, CSS for front-end UI.
 2. PHP as server-side language.
