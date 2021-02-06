@@ -1,5 +1,5 @@
 # Social
-Website
+Social Website
 This project creates a Social website where users can do the following:
 
 1. Register and create an account.
